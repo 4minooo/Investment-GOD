@@ -8,6 +8,6 @@
     "generate:maps": "node scripts/generate-maps.mjs"
   },
   "engines": {
-    "node": ">=20"
+    "node": "22.x"
   }
 }
