@@ -1,0 +1,23 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/firebase-config.js",
+      "destination": "/api/firebase-config.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/src/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
+    }
+  ]
+}

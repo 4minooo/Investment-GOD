@@ -1,0 +1,13 @@
+{
+  "name": "investment-god",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/dev-server.mjs",
+    "build": "node scripts/check-build.mjs",
+    "generate:maps": "node scripts/generate-maps.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
