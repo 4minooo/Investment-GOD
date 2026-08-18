@@ -97,25 +97,28 @@ export async function createFirebaseGameService(config) {
     }
 
     const transaction = await runTransaction(roomRef(roomCode), (currentRoom) => {
-      if (!currentRoom) return;
-      const currentPlayers = currentRoom.players || {};
+      // Transactions can receive null before the remote room reaches the local cache.
+      const latestRoom = currentRoom || room;
+      const currentPlayers = latestRoom.players || {};
       const isReturningPlayer = Boolean(currentPlayers[player.id]);
-      if (!isReturningPlayer && (currentRoom.status !== "waiting" || Object.keys(currentPlayers).length >= 4)) {
+      if (!isReturningPlayer && (latestRoom.status !== "waiting" || Object.keys(currentPlayers).length >= 4)) {
         return;
       }
 
-      currentRoom.players = {
-        ...currentPlayers,
-        [player.id]: {
-          ...currentPlayers[player.id],
-          id: player.id,
-          name: player.name,
-          joinedAt: currentPlayers[player.id]?.joinedAt || Date.now(),
-          connected: true,
-          choices: currentPlayers[player.id]?.choices || {}
+      return {
+        ...latestRoom,
+        players: {
+          ...currentPlayers,
+          [player.id]: {
+            ...currentPlayers[player.id],
+            id: player.id,
+            name: player.name,
+            joinedAt: currentPlayers[player.id]?.joinedAt || Date.now(),
+            connected: true,
+            choices: currentPlayers[player.id]?.choices || {}
+          }
         }
       };
-      return currentRoom;
     });
     if (!transaction.committed) {
       throw new Error("방이 가득 찼거나 이미 대전이 시작되었습니다.");
@@ -159,3 +162,4 @@ export async function createFirebaseGameService(config) {
     subscribeRoom
   };
 }
+
